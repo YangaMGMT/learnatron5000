@@ -17,6 +17,15 @@ class { 'rbenv':
 rbenv::plugin { 'sstephenson/ruby-build': }
 rbenv::build { '2.1.1': global => true }
 
+class { 'postgresql::server':
+  ip_mask_deny_postgres_user => '0.0.0.0/32',
+  ip_mask_allow_all_users    => '0.0.0.0/0',
+  listen_addresses           => '*',
+  ipv4acls                   => ['hostssl all johndoe 192.168.0.0/24 cert'],
+  manage_firewall            => true,
+  postgres_password          => 'mypass',
+}
+
 file { "/home/vagrant/bundle" :
   ensure => directory,
   owner => "vagrant",
